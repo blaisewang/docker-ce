@@ -111,8 +111,14 @@ RUN /download-frozen-image-v2.sh /build \
 FROM base AS runtime-dev
 RUN apt-get update && apt-get install -y \
 	libapparmor-dev \
-	libseccomp-dev
+	wget \
+	gperf
 
+# install libseccomp 2.5.1
+RUN wget https://github.com/seccomp/libseccomp/releases/download/v2.5.1/libseccomp-2.5.1.tar.gz \
+    && tar zxf libseccomp-2.5.1.tar.gz
+
+RUN cd libseccomp-2.5.1 && ./configure && make V=0 && make install
 
 FROM base AS tomlv
 ENV INSTALL_BINARY_NAME=tomlv
